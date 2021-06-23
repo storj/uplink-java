@@ -52,13 +52,13 @@ public class ObjectOutputStream extends OutputStream {
 
             Pointer byteArray = new Memory(1);
             byteArray.write(0, buf, 0, buf.length);
-            JNAUplink.WriteResult.ByValue writeResult = JNAUplink.INSTANCE.upload_write(this.cUpload, byteArray, new NativeLong(1));
+            JNAUplink.WriteResult.ByValue writeResult = JNAUplink.INSTANCE.uplink_upload_write(this.cUpload, byteArray, new NativeLong(1));
             try {
                 ExceptionUtil.handleError(writeResult.error);
             } catch (StorjException e) {
                 throw new IOException(e);
             }
-            JNAUplink.INSTANCE.free_write_result(writeResult);
+            JNAUplink.INSTANCE.uplink_free_write_result(writeResult);
         } catch (IOException e) {
             this.abort();
             throw e;
@@ -109,13 +109,13 @@ public class ObjectOutputStream extends OutputStream {
 
             Pointer byteArray = new Memory(len);
             byteArray.write(0, b, off, len);
-            JNAUplink.WriteResult.ByValue writeResult = JNAUplink.INSTANCE.upload_write(this.cUpload, byteArray, new NativeLong(len));
+            JNAUplink.WriteResult.ByValue writeResult = JNAUplink.INSTANCE.uplink_upload_write(this.cUpload, byteArray, new NativeLong(len));
             try {
                 ExceptionUtil.handleError(writeResult.error);
             } catch (StorjException e) {
                 throw new IOException(e);
             }
-            JNAUplink.INSTANCE.free_write_result(writeResult);
+            JNAUplink.INSTANCE.uplink_free_write_result(writeResult);
         } catch (IOException e) {
             this.abort();
             throw e;
@@ -130,7 +130,7 @@ public class ObjectOutputStream extends OutputStream {
      */
     public void commit() throws StorjException {
         this.committed = true;
-        JNAUplink.Error.ByReference error = JNAUplink.INSTANCE.upload_commit(this.cUpload);
+        JNAUplink.Error.ByReference error = JNAUplink.INSTANCE.uplink_upload_commit(this.cUpload);
         ExceptionUtil.handleError(error);
     }
 
@@ -141,10 +141,10 @@ public class ObjectOutputStream extends OutputStream {
      * @throws StorjException if an error occurs during retrieving info
      */
     public ObjectInfo info() throws StorjException {
-        JNAUplink.ObjectResult.ByValue result = JNAUplink.INSTANCE.upload_info(this.cUpload);
+        JNAUplink.ObjectResult.ByValue result = JNAUplink.INSTANCE.uplink_upload_info(this.cUpload);
         ExceptionUtil.handleError(result.error);
         ObjectInfo info = new ObjectInfo(result.object);
-        JNAUplink.INSTANCE.free_object_result(result);
+        JNAUplink.INSTANCE.uplink_free_object_result(result);
         return info;
     }
 
@@ -184,7 +184,7 @@ public class ObjectOutputStream extends OutputStream {
         customMetadata.entries = ((JNAUplink.CustomMetadataEntry.ByReference) entries[0]);
         customMetadata.count = new NativeLong(entries.length);
 
-        JNAUplink.Error.ByReference error = JNAUplink.INSTANCE.upload_set_custom_metadata(this.cUpload, customMetadata);
+        JNAUplink.Error.ByReference error = JNAUplink.INSTANCE.uplink_upload_set_custom_metadata(this.cUpload, customMetadata);
         ExceptionUtil.handleError(error);
     }
 
@@ -193,7 +193,7 @@ public class ObjectOutputStream extends OutputStream {
             return;
         }
 
-        JNAUplink.Error.ByReference error = JNAUplink.INSTANCE.upload_abort(this.cUpload);
+        JNAUplink.Error.ByReference error = JNAUplink.INSTANCE.uplink_upload_abort(this.cUpload);
         try {
             ExceptionUtil.handleError(error);
         } catch (StorjException e) {
@@ -221,7 +221,7 @@ public class ObjectOutputStream extends OutputStream {
         } finally {
             JNAUplink.UploadResult.ByValue result = new JNAUplink.UploadResult.ByValue();
             result.upload = this.cUpload;
-            JNAUplink.INSTANCE.free_upload_result(result);
+            JNAUplink.INSTANCE.uplink_free_upload_result(result);
         }
     }
 }

@@ -38,9 +38,9 @@ public class Access {
      * @throws StorjException in case of error
      */
     public static Access parse(String serialized) throws StorjException {
-        JNAUplink.AccessResult.ByValue result = JNAUplink.INSTANCE.parse_access(serialized);
+        JNAUplink.AccessResult.ByValue result = JNAUplink.INSTANCE.uplink_parse_access(serialized);
         ExceptionUtil.handleError(result.error);
-        JNAUplink.INSTANCE.free_access_result(result);
+        JNAUplink.INSTANCE.uplink_free_access_result(result);
         return new Access(serialized);
     }
 
@@ -76,25 +76,25 @@ public class Access {
         }
 
         try {
-            accessResult = JNAUplink.INSTANCE.parse_access(this.serializedAccess);
+            accessResult = JNAUplink.INSTANCE.uplink_parse_access(this.serializedAccess);
             ExceptionUtil.handleError(accessResult.error);
 
-            shareResult = JNAUplink.INSTANCE.access_share(accessResult.access, cPermission, firstPrefix, prefixes.length);
+            shareResult = JNAUplink.INSTANCE.uplink_access_share(accessResult.access, cPermission, firstPrefix, prefixes.length);
             ExceptionUtil.handleError(shareResult.error);
 
-            stringResult = JNAUplink.INSTANCE.access_serialize(shareResult.access);
+            stringResult = JNAUplink.INSTANCE.uplink_access_serialize(shareResult.access);
             ExceptionUtil.handleError(stringResult.error);
 
             return new Access(stringResult.string);
         } finally {
             if (accessResult != null) {
-                JNAUplink.INSTANCE.free_access_result(accessResult);
+                JNAUplink.INSTANCE.uplink_free_access_result(accessResult);
             }
             if (shareResult != null) {
-                JNAUplink.INSTANCE.free_access_result(shareResult);
+                JNAUplink.INSTANCE.uplink_free_access_result(shareResult);
             }
             if (stringResult != null) {
-                JNAUplink.INSTANCE.free_string_result(stringResult);
+                JNAUplink.INSTANCE.uplink_free_string_result(stringResult);
             }
         }
     }
@@ -115,22 +115,22 @@ public class Access {
         JNAUplink.AccessResult.ByValue accessResult = null;
         JNAUplink.EncryptionKeyResult.ByValue encKeyResult = null;
         try {
-            accessResult = JNAUplink.INSTANCE.parse_access(this.serializedAccess);
+            accessResult = JNAUplink.INSTANCE.uplink_parse_access(this.serializedAccess);
             ExceptionUtil.handleError(accessResult.error);
 
             Pointer salt = new Memory(encryptionKey.getSalt().length);
             salt.write(0, encryptionKey.getSalt(), 0, encryptionKey.getSalt().length);
-            encKeyResult = JNAUplink.INSTANCE.derive_encryption_key(encryptionKey.getPassphrase(), salt, new NativeLong(encryptionKey.getSalt().length));
+            encKeyResult = JNAUplink.INSTANCE.uplink_derive_encryption_key(encryptionKey.getPassphrase(), salt, new NativeLong(encryptionKey.getSalt().length));
             ExceptionUtil.handleError(encKeyResult.error);
 
-            JNAUplink.Error.ByReference error = JNAUplink.INSTANCE.access_override_encryption_key(accessResult.access, bucket, prefix, encKeyResult.encryption_key);
+            JNAUplink.Error.ByReference error = JNAUplink.INSTANCE.uplink_access_override_encryption_key(accessResult.access, bucket, prefix, encKeyResult.encryption_key);
             ExceptionUtil.handleError(error);
         } finally {
             if (accessResult != null) {
-                JNAUplink.INSTANCE.free_access_result(accessResult);
+                JNAUplink.INSTANCE.uplink_free_access_result(accessResult);
             }
             if (encKeyResult != null) {
-                JNAUplink.INSTANCE.free_encryption_key_result(encKeyResult);
+                JNAUplink.INSTANCE.uplink_free_encryption_key_result(encKeyResult);
             }
         }
     }

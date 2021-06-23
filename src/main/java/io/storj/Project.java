@@ -33,11 +33,11 @@ public class Project implements AutoCloseable {
      * @throws StorjException if an error occurs during the deletion
      */
     public BucketInfo statBucket(String bucket) throws StorjException {
-        JNAUplink.BucketResult.ByValue result = JNAUplink.INSTANCE.stat_bucket(this.project, bucket);
+        JNAUplink.BucketResult.ByValue result = JNAUplink.INSTANCE.uplink_stat_bucket(this.project, bucket);
         ExceptionUtil.handleError(result.error);
 
         BucketInfo bucketInfo = new BucketInfo(result.bucket);
-        JNAUplink.INSTANCE.free_bucket_result(result);
+        JNAUplink.INSTANCE.uplink_free_bucket_result(result);
         return bucketInfo;
     }
 
@@ -49,11 +49,11 @@ public class Project implements AutoCloseable {
      * @throws StorjException if an error occurs during the deletion
      */
     public BucketInfo createBucket(String bucket) throws StorjException {
-        JNAUplink.BucketResult.ByValue result = JNAUplink.INSTANCE.create_bucket(this.project, bucket);
+        JNAUplink.BucketResult.ByValue result = JNAUplink.INSTANCE.uplink_create_bucket(this.project, bucket);
         ExceptionUtil.handleError(result.error);
 
         BucketInfo bucketInfo = new BucketInfo(result.bucket);
-        JNAUplink.INSTANCE.free_bucket_result(result);
+        JNAUplink.INSTANCE.uplink_free_bucket_result(result);
         return bucketInfo;
     }
 
@@ -65,11 +65,11 @@ public class Project implements AutoCloseable {
      * @throws StorjException if an error occurs during the deletion
      */
     public BucketInfo ensureBucket(String bucket) throws StorjException {
-        JNAUplink.BucketResult.ByValue result = JNAUplink.INSTANCE.ensure_bucket(this.project, bucket);
+        JNAUplink.BucketResult.ByValue result = JNAUplink.INSTANCE.uplink_ensure_bucket(this.project, bucket);
         ExceptionUtil.handleError(result.error);
 
         BucketInfo bucketInfo = new BucketInfo(result.bucket);
-        JNAUplink.INSTANCE.free_bucket_result(result);
+        JNAUplink.INSTANCE.uplink_free_bucket_result(result);
         return bucketInfo;
     }
 
@@ -85,11 +85,11 @@ public class Project implements AutoCloseable {
      * @throws StorjException if an error occurs during the deletion
      */
     public BucketInfo deleteBucket(String bucket) throws StorjException {
-        JNAUplink.BucketResult.ByValue deleteBucket = JNAUplink.INSTANCE.delete_bucket(this.project, bucket);
+        JNAUplink.BucketResult.ByValue deleteBucket = JNAUplink.INSTANCE.uplink_delete_bucket(this.project, bucket);
         ExceptionUtil.handleError(deleteBucket.error);
 
         BucketInfo bucketInfo = new BucketInfo(deleteBucket.bucket);
-        JNAUplink.INSTANCE.free_bucket_result(deleteBucket);
+        JNAUplink.INSTANCE.uplink_free_bucket_result(deleteBucket);
         return bucketInfo;
     }
 
@@ -102,11 +102,11 @@ public class Project implements AutoCloseable {
      * @throws StorjException if an error occurs during the deletion
      */
     public ObjectInfo statObject(String bucket, String key) throws StorjException {
-        JNAUplink.ObjectResult.ByValue statObject = JNAUplink.INSTANCE.stat_object(this.project, bucket, key);
+        JNAUplink.ObjectResult.ByValue statObject = JNAUplink.INSTANCE.uplink_stat_object(this.project, bucket, key);
         ExceptionUtil.handleError(statObject.error);
 
         ObjectInfo objectInfo = new ObjectInfo(statObject.object);
-        JNAUplink.INSTANCE.free_object_result(statObject);
+        JNAUplink.INSTANCE.uplink_free_object_result(statObject);
         return objectInfo;
     }
 
@@ -119,11 +119,14 @@ public class Project implements AutoCloseable {
      * @throws StorjException if an error occurs during the deletion
      */
     public ObjectInfo deleteObject(String bucket, String key) throws StorjException {
-        JNAUplink.ObjectResult.ByValue statObject = JNAUplink.INSTANCE.delete_object(this.project, bucket, key);
+        JNAUplink.ObjectResult.ByValue statObject = JNAUplink.INSTANCE.uplink_delete_object(this.project, bucket, key);
         ExceptionUtil.handleError(statObject.error);
-
+        if (statObject.object == null) {
+            JNAUplink.INSTANCE.uplink_free_object_result(statObject);
+            return null;
+        }
         ObjectInfo objectInfo = new ObjectInfo(statObject.object);
-        JNAUplink.INSTANCE.free_object_result(statObject);
+        JNAUplink.INSTANCE.uplink_free_object_result(statObject);
         return objectInfo;
     }
 
@@ -137,7 +140,7 @@ public class Project implements AutoCloseable {
      * @throws StorjException if an error occurs during the upload
      */
     public ObjectOutputStream uploadObject(String bucket, String key, ObjectUploadOption... options) throws StorjException {
-        JNAUplink.UploadResult.ByValue uploadResult = JNAUplink.INSTANCE.upload_object(this.project, bucket, key,
+        JNAUplink.UploadResult.ByValue uploadResult = JNAUplink.INSTANCE.uplink_upload_object(this.project, bucket, key,
                 ObjectUploadOption.internal(options));
         ExceptionUtil.handleError(uploadResult.error);
 
@@ -154,7 +157,7 @@ public class Project implements AutoCloseable {
      * @throws StorjException if an error occurs during the download
      */
     public ObjectInputStream downloadObject(String bucket, String key, ObjectDownloadOption... options) throws StorjException {
-        JNAUplink.DownloadResult.ByValue downloadResult = JNAUplink.INSTANCE.download_object(this.project, bucket, key,
+        JNAUplink.DownloadResult.ByValue downloadResult = JNAUplink.INSTANCE.uplink_download_object(this.project, bucket, key,
                 ObjectDownloadOption.internal(options));
         ExceptionUtil.handleError(downloadResult.error);
 
@@ -174,7 +177,7 @@ public class Project implements AutoCloseable {
 
     @Override
     public void close() throws StorjException {
-        JNAUplink.Error.ByReference result = JNAUplink.INSTANCE.close_project(this.project);
+        JNAUplink.Error.ByReference result = JNAUplink.INSTANCE.uplink_close_project(this.project);
         ExceptionUtil.handleError(result);
     }
 }

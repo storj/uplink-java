@@ -142,13 +142,13 @@ interface JNAUplink extends Library {
     @Structure.FieldOrder({"access", "error"})
     public static class AccessResult extends Structure {
         public JNAUplink.Access.ByReference access;
-        public JNAUplink.Error.ByReference error;
+        public Error.ByReference error;
 
         public AccessResult() {
             super();
         }
 
-        public AccessResult(JNAUplink.Access.ByReference access, JNAUplink.Error.ByReference error) {
+        public AccessResult(JNAUplink.Access.ByReference access, Error.ByReference error) {
             super();
             this.access = access;
             this.error = error;
@@ -164,13 +164,13 @@ interface JNAUplink extends Library {
     @Structure.FieldOrder({"project", "error"})
     public static class ProjectResult extends Structure {
         public JNAUplink.Project.ByReference project;
-        public JNAUplink.Error.ByReference error;
+        public Error.ByReference error;
 
         public ProjectResult() {
             super();
         }
 
-        public ProjectResult(JNAUplink.Project.ByReference project, JNAUplink.Error.ByReference error) {
+        public ProjectResult(JNAUplink.Project.ByReference project, Error.ByReference error) {
             super();
             this.project = project;
             this.error = error;
@@ -185,14 +185,14 @@ interface JNAUplink extends Library {
 
     @Structure.FieldOrder({"bucket", "error"})
     public static class BucketResult extends Structure {
-        public JNAUplink.Bucket.ByReference bucket;
-        public JNAUplink.Error.ByReference error;
+        public Bucket.ByReference bucket;
+        public Error.ByReference error;
 
         public BucketResult() {
             super();
         }
 
-        public BucketResult(JNAUplink.Bucket.ByReference bucket, JNAUplink.Error.ByReference error) {
+        public BucketResult(Bucket.ByReference bucket, Error.ByReference error) {
             super();
             this.bucket = bucket;
             this.error = error;
@@ -208,13 +208,13 @@ interface JNAUplink extends Library {
     @Structure.FieldOrder({"string", "error"})
     public static class StringResult extends Structure {
         public String string;
-        public JNAUplink.Error.ByReference error;
+        public Error.ByReference error;
 
         public StringResult() {
             super();
         }
 
-        public StringResult(String string, JNAUplink.Error.ByReference error) {
+        public StringResult(String string, Error.ByReference error) {
             super();
             this.string = string;
             this.error = error;
@@ -517,13 +517,13 @@ interface JNAUplink extends Library {
     @Structure.FieldOrder({"object", "error"})
     public static class ObjectResult extends Structure {
         public JNAUplink.Object.ByReference object;
-        public JNAUplink.Error.ByReference error;
+        public Error.ByReference error;
 
         public ObjectResult() {
             super();
         }
 
-        public ObjectResult(JNAUplink.Object.ByReference object, JNAUplink.Error.ByReference error) {
+        public ObjectResult(JNAUplink.Object.ByReference object, Error.ByReference error) {
             super();
             this.object = object;
             this.error = error;
@@ -539,13 +539,13 @@ interface JNAUplink extends Library {
     @Structure.FieldOrder({"upload", "error"})
     public static class UploadResult extends Structure {
         public JNAUplink.Upload.ByReference upload;
-        public JNAUplink.Error.ByReference error;
+        public Error.ByReference error;
 
         public UploadResult() {
             super();
         }
 
-        public UploadResult(JNAUplink.Upload.ByReference upload, JNAUplink.Error.ByReference error) {
+        public UploadResult(JNAUplink.Upload.ByReference upload, Error.ByReference error) {
             super();
             this.upload = upload;
             this.error = error;
@@ -561,13 +561,13 @@ interface JNAUplink extends Library {
     @Structure.FieldOrder({"download", "error"})
     public static class DownloadResult extends Structure {
         public JNAUplink.Download.ByReference download;
-        public JNAUplink.Error.ByReference error;
+        public Error.ByReference error;
 
         public DownloadResult() {
             super();
         }
 
-        public DownloadResult(JNAUplink.Download.ByReference download, JNAUplink.Error.ByReference error) {
+        public DownloadResult(JNAUplink.Download.ByReference download, Error.ByReference error) {
             super();
             this.download = download;
             this.error = error;
@@ -583,13 +583,13 @@ interface JNAUplink extends Library {
     @Structure.FieldOrder({"bytes_written", "error"})
     public static class WriteResult extends Structure {
         public NativeLong bytes_written;
-        public JNAUplink.Error.ByReference error;
+        public Error.ByReference error;
 
         public WriteResult() {
             super();
         }
 
-        public WriteResult(NativeLong bytes_written, JNAUplink.Error.ByReference error) {
+        public WriteResult(NativeLong bytes_written, Error.ByReference error) {
             super();
             this.bytes_written = bytes_written;
             this.error = error;
@@ -605,13 +605,13 @@ interface JNAUplink extends Library {
     @Structure.FieldOrder({"bytes_read", "error"})
     public static class ReadResult extends Structure {
         public NativeLong bytes_read;
-        public JNAUplink.Error.ByReference error;
+        public Error.ByReference error;
 
         public ReadResult() {
             super();
         }
 
-        public ReadResult(NativeLong bytes_read, JNAUplink.Error.ByReference error) {
+        public ReadResult(NativeLong bytes_read, Error.ByReference error) {
             super();
             this.bytes_read = bytes_read;
             this.error = error;
@@ -627,13 +627,13 @@ interface JNAUplink extends Library {
     @Structure.FieldOrder({"encryption_key", "error"})
     public static class EncryptionKeyResult extends Structure {
         public JNAUplink.EncryptionKey.ByReference encryption_key;
-        public JNAUplink.Error.ByReference error;
+        public Error.ByReference error;
 
         public EncryptionKeyResult() {
             super();
         }
 
-        public EncryptionKeyResult(JNAUplink.EncryptionKey.ByReference encryption_key, JNAUplink.Error.ByReference error) {
+        public EncryptionKeyResult(JNAUplink.EncryptionKey.ByReference encryption_key, Error.ByReference error) {
             super();
             this.encryption_key = encryption_key;
             this.error = error;
@@ -647,108 +647,108 @@ interface JNAUplink extends Library {
     }
 
     // access
-    AccessResult.ByValue parse_access(String access);
+    AccessResult.ByValue uplink_parse_access(String access);
 
-    AccessResult.ByValue request_access_with_passphrase(String address, String apiKey, String passphrase);
+    AccessResult.ByValue uplink_request_access_with_passphrase(String address, String apiKey, String passphrase);
 
-    AccessResult.ByValue config_request_access_with_passphrase(Config.ByValue config, String address, String apiKey, String passphrase);
+    AccessResult.ByValue uplink_config_request_access_with_passphrase(Config.ByValue config, String address, String apiKey, String passphrase);
 
-    StringResult.ByValue access_serialize(Access.ByReference access);
+    StringResult.ByValue uplink_access_serialize(Access.ByReference access);
 
-    Error.ByReference access_override_encryption_key(Access.ByReference access, String bucket, String prefix, EncryptionKey.ByReference encryptionKey);
+    Error.ByReference uplink_access_override_encryption_key(Access.ByReference access, String bucket, String prefix, EncryptionKey.ByReference encryptionKey);
 
-    void free_encryption_key_result(EncryptionKeyResult.ByValue result);
+    void uplink_free_encryption_key_result(EncryptionKeyResult.ByValue result);
 
-    EncryptionKeyResult.ByValue derive_encryption_key(String passphrase, Pointer salt, NativeLong length);
+    EncryptionKeyResult.ByValue uplink_derive_encryption_key(String passphrase, Pointer salt, NativeLong length);
 
     // long is used directly because in uplink-c its long long
-    AccessResult.ByValue access_share(Access.ByReference access, Permission.ByValue permission, SharePrefix.ByReference prefixes, long size);
+    AccessResult.ByValue uplink_access_share(Access.ByReference access, Permission.ByValue permission, SharePrefix.ByReference prefixes, long size);
 
-    void free_access_result(AccessResult.ByValue result);
+    void uplink_free_access_result(AccessResult.ByValue result);
 
     // bucket
-    BucketResult.ByValue stat_bucket(Project.ByReference project, String bucket);
+    BucketResult.ByValue uplink_stat_bucket(Project.ByReference project, String bucket);
 
-    BucketResult.ByValue create_bucket(Project.ByReference project, String bucket);
+    BucketResult.ByValue uplink_create_bucket(Project.ByReference project, String bucket);
 
-    BucketResult.ByValue ensure_bucket(Project.ByReference project, String bucket);
+    BucketResult.ByValue uplink_ensure_bucket(Project.ByReference project, String bucket);
 
-    BucketResult.ByValue delete_bucket(Project.ByReference project, String bucket);
+    BucketResult.ByValue uplink_delete_bucket(Project.ByReference project, String bucket);
 
-    void free_bucket_result(BucketResult.ByValue p0);
+    void uplink_free_bucket_result(BucketResult.ByValue p0);
 
-    void free_bucket(Bucket.ByReference bucket);
+    void uplink_free_bucket(Bucket.ByReference bucket);
 
-    BucketIterator.ByReference list_buckets(Project.ByReference project, ListBucketsOptions.ByReference options);
+    BucketIterator.ByReference uplink_list_buckets(Project.ByReference project, ListBucketsOptions.ByReference options);
 
-    boolean bucket_iterator_next(BucketIterator.ByReference iterator);
+    boolean uplink_bucket_iterator_next(BucketIterator.ByReference iterator);
 
-    Error.ByReference bucket_iterator_err(BucketIterator.ByReference iterator);
+    Error.ByReference uplink_bucket_iterator_err(BucketIterator.ByReference iterator);
 
-    Bucket.ByReference bucket_iterator_item(BucketIterator.ByReference iterator);
+    Bucket.ByReference uplink_bucket_iterator_item(BucketIterator.ByReference iterator);
 
-    void free_bucket_iterator(BucketIterator.ByReference iterator);
+    void uplink_free_bucket_iterator(BucketIterator.ByReference iterator);
 
     // project
-    ProjectResult.ByValue config_open_project(Config.ByValue config, Access.ByReference access);
+    ProjectResult.ByValue uplink_config_open_project(Config.ByValue config, Access.ByReference access);
 
-    ProjectResult.ByValue open_project(Access.ByReference access);
+    ProjectResult.ByValue uplink_open_project(Access.ByReference access);
 
-    Error.ByReference close_project(Project.ByReference project);
+    Error.ByReference uplink_close_project(Project.ByReference project);
 
-    void free_project_result(ProjectResult.ByValue result);
+    void uplink_free_project_result(ProjectResult.ByValue result);
 
     // object
-    ObjectResult.ByValue stat_object(Project.ByReference project, String bucket, String key);
+    ObjectResult.ByValue uplink_stat_object(Project.ByReference project, String bucket, String key);
 
-    ObjectResult.ByValue delete_object(Project.ByReference project, String bucket, String key);
+    ObjectResult.ByValue uplink_delete_object(Project.ByReference project, String bucket, String key);
 
-    void free_object_result(ObjectResult.ByValue result);
+    void uplink_free_object_result(ObjectResult.ByValue result);
 
-    void free_object(Object.ByReference object);
+    void uplink_free_object(Object.ByReference object);
 
-    ObjectIterator.ByReference list_objects(Project.ByReference project, String bucket, ListObjectsOptions.ByReference options);
+    ObjectIterator.ByReference uplink_list_objects(Project.ByReference project, String bucket, ListObjectsOptions.ByReference options);
 
-    boolean object_iterator_next(ObjectIterator.ByReference iterator);
+    boolean uplink_object_iterator_next(ObjectIterator.ByReference iterator);
 
-    Error.ByReference object_iterator_err(ObjectIterator.ByReference iterator);
+    Error.ByReference uplink_object_iterator_err(ObjectIterator.ByReference iterator);
 
-    Object.ByReference object_iterator_item(ObjectIterator.ByReference iterator);
+    Object.ByReference uplink_object_iterator_item(ObjectIterator.ByReference iterator);
 
-    void free_object_iterator(ObjectIterator.ByReference iterator);
+    void uplink_free_object_iterator(ObjectIterator.ByReference iterator);
 
     // upload
-    UploadResult.ByValue upload_object(Project.ByReference project, String bucket, String key, UploadOptions.ByReference options);
+    UploadResult.ByValue uplink_upload_object(Project.ByReference project, String bucket, String key, UploadOptions.ByReference options);
 
-    WriteResult.ByValue upload_write(Upload.ByReference upload, Pointer bytes, NativeLong size);
+    WriteResult.ByValue uplink_upload_write(Upload.ByReference upload, Pointer bytes, NativeLong size);
 
-    Error.ByReference upload_commit(Upload.ByReference upload);
+    Error.ByReference uplink_upload_commit(Upload.ByReference upload);
 
-    Error.ByReference upload_abort(Upload.ByReference upload);
+    Error.ByReference uplink_upload_abort(Upload.ByReference upload);
 
-    ObjectResult.ByValue upload_info(Upload.ByReference upload);
+    ObjectResult.ByValue uplink_upload_info(Upload.ByReference upload);
 
-    Error.ByReference upload_set_custom_metadata(Upload.ByReference upload, CustomMetadata.ByValue metadata);
+    Error.ByReference uplink_upload_set_custom_metadata(Upload.ByReference upload, CustomMetadata.ByValue metadata);
 
-    void free_write_result(WriteResult.ByValue result);
+    void uplink_free_write_result(WriteResult.ByValue result);
 
-    void free_upload_result(UploadResult.ByValue result);
+    void uplink_free_upload_result(UploadResult.ByValue result);
 
     // download
-    DownloadResult.ByValue download_object(Project.ByReference project, String bucket, String key, DownloadOptions options);
+    DownloadResult.ByValue uplink_download_object(Project.ByReference project, String bucket, String key, DownloadOptions options);
 
-    ReadResult.ByValue download_read(Download.ByReference download, byte[] bytes, NativeLong size);
+    ReadResult.ByValue uplink_download_read(Download.ByReference download, byte[] bytes, NativeLong size);
 
-    ObjectResult.ByValue download_info(Download.ByReference download);
+    ObjectResult.ByValue uplink_download_info(Download.ByReference download);
 
-    void free_read_result(ReadResult.ByValue result);
+    void uplink_free_read_result(ReadResult.ByValue result);
 
-    Error.ByReference close_download(Download.ByReference download);
+    Error.ByReference uplink_close_download(Download.ByReference download);
 
-    void free_download_result(DownloadResult.ByValue result);
+    void uplink_free_download_result(DownloadResult.ByValue result);
 
     // other
-    void free_string_result(StringResult.ByValue result);
+    void uplink_free_string_result(StringResult.ByValue result);
 
-    void free_error(Error.ByReference error);
+    void uplink_free_error(Error.ByReference error);
 }
