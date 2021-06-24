@@ -1,2 +1,2 @@
 # uplink-java
-Storj network Java library
+Java library to access the Storj Network
