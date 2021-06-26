@@ -426,12 +426,10 @@ public class UplinkTest {
             }
 
             try {
-                final ObjectInfo objectInfo = project.deleteObject("existing-bucket", "not-existing-object");
-                Assert.assertNull(objectInfo);
-
+                project.deleteObject("existing-bucket", "not-existing-object");
+                fail();
             } catch (StorjException e) {
                 // error expected
-                fail();
             }
             try {
                 project.deleteObject("existing-bucket", null);
