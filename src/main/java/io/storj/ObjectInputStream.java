@@ -121,7 +121,7 @@ public class ObjectInputStream extends InputStream {
         }
 
         byte[] byteArray = new byte[len];
-        JNAUplink.ReadResult.ByValue readResult = JNAUplink.INSTANCE.download_read(this.cDownload, byteArray, new NativeLong(len));
+        JNAUplink.ReadResult.ByValue readResult = JNAUplink.INSTANCE.uplink_download_read(this.cDownload, byteArray, new NativeLong(len));
 
         if (readResult.error != null && readResult.error.code == JNAUplink.EOF) {
             this.isEOF = true;
@@ -145,10 +145,10 @@ public class ObjectInputStream extends InputStream {
      * @throws StorjException if an error occurs during retrieving info
      */
     public ObjectInfo info() throws StorjException {
-        JNAUplink.ObjectResult.ByValue result = JNAUplink.INSTANCE.download_info(this.cDownload);
+        JNAUplink.ObjectResult.ByValue result = JNAUplink.INSTANCE.uplink_download_info(this.cDownload);
         ExceptionUtil.handleError(result.error);
         ObjectInfo info = new ObjectInfo(result.object);
-        JNAUplink.INSTANCE.free_object_result(result);
+        JNAUplink.INSTANCE.uplink_free_object_result(result);
         return info;
     }
 
@@ -163,7 +163,7 @@ public class ObjectInputStream extends InputStream {
      */
     @Override
     public void close() throws IOException {
-        JNAUplink.Error.ByReference error = JNAUplink.INSTANCE.close_download(this.cDownload);
+        JNAUplink.Error.ByReference error = JNAUplink.INSTANCE.uplink_close_download(this.cDownload);
         try {
             ExceptionUtil.handleError(error);
         } catch (StorjException e) {
@@ -171,7 +171,7 @@ public class ObjectInputStream extends InputStream {
         } finally {
             JNAUplink.DownloadResult.ByValue result = new JNAUplink.DownloadResult.ByValue();
             result.download = this.cDownload;
-            JNAUplink.INSTANCE.free_download_result(result);
+            JNAUplink.INSTANCE.uplink_free_download_result(result);
         }
     }
 }

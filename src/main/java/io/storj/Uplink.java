@@ -25,19 +25,19 @@ public class Uplink {
         }
 
         JNAUplink.ProjectResult.ByValue result = null;
-        JNAUplink.AccessResult.ByValue internalAccess = JNAUplink.INSTANCE.parse_access(serializedAccess);
+        JNAUplink.AccessResult.ByValue internalAccess = JNAUplink.INSTANCE.uplink_parse_access(serializedAccess);
         ExceptionUtil.handleError(internalAccess.error);
 
         try {
             if (options.length == 0) {
-                result = JNAUplink.INSTANCE.open_project(internalAccess.access);
+                result = JNAUplink.INSTANCE.uplink_open_project(internalAccess.access);
             } else {
                 JNAUplink.Config.ByValue config = UplinkOption.internal(options);
-                result = JNAUplink.INSTANCE.config_open_project(config, internalAccess.access);
+                result = JNAUplink.INSTANCE.uplink_config_open_project(config, internalAccess.access);
             }
             ExceptionUtil.handleError(result.error);
         } finally {
-            JNAUplink.INSTANCE.free_access_result(internalAccess);
+            JNAUplink.INSTANCE.uplink_free_access_result(internalAccess);
         }
         return new Project(result.project);
     }
@@ -61,21 +61,21 @@ public class Uplink {
         JNAUplink.AccessResult.ByValue result = null;
 
         if (options.length == 0) {
-            result = JNAUplink.INSTANCE.request_access_with_passphrase(satelliteAddress, apiKey, passphrase);
+            result = JNAUplink.INSTANCE.uplink_request_access_with_passphrase(satelliteAddress, apiKey, passphrase);
         } else {
             JNAUplink.Config.ByValue config = UplinkOption.internal(options);
-            result = JNAUplink.INSTANCE.config_request_access_with_passphrase(config, satelliteAddress, apiKey, passphrase);
+            result = JNAUplink.INSTANCE.uplink_config_request_access_with_passphrase(config, satelliteAddress, apiKey, passphrase);
         }
         ExceptionUtil.handleError(result.error);
 
-        JNAUplink.StringResult.ByValue stringResult = JNAUplink.INSTANCE.access_serialize(result.access);
+        JNAUplink.StringResult.ByValue stringResult = JNAUplink.INSTANCE.uplink_access_serialize(result.access);
         try {
             ExceptionUtil.handleError(stringResult.error);
 
             return new Access(stringResult.string);
         } finally {
-            JNAUplink.INSTANCE.free_access_result(result);
-            JNAUplink.INSTANCE.free_string_result(stringResult);
+            JNAUplink.INSTANCE.uplink_free_access_result(result);
+            JNAUplink.INSTANCE.uplink_free_string_result(stringResult);
         }
     }
 
