@@ -84,7 +84,7 @@ public class ObjectOutputStream extends OutputStream {
      * <p>
      * If <code>off</code> is negative, or <code>len</code> is negative, or
      * <code>off+len</code> is greater than the length of the array
-     * <code>b</code>, then an <tt>IndexOutOfBoundsException</tt> is thrown.
+     * <code>b</code>, then an <code>IndexOutOfBoundsException</code> is thrown.
      * <p>
      * If error occur upload is automatically aborted.
      *
