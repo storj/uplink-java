@@ -20,5 +20,5 @@ docker-compose up -d
 sleep 30
 
 eval $(storj-up credentials -e)
-mvn clean install
-
+cd "$SCRIPTDIR/example"
+mvn compile exec:java -Dexec.mainClass=io.storj.uplink.example.Example
