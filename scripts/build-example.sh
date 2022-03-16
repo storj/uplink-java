@@ -19,7 +19,7 @@ docker-compose up -d
 #TODO: use smarter way to check if it's up and running
 sleep 30
 
-export LD_LIBRARY_PATH=$SCRIPTDIR/.build
+export LD_LIBRARY_PATH=$SCRIPTDIR/../.build
 eval $(storj-up credentials -e)
 cd "$SCRIPTDIR/../example"
 mvn compile exec:java -Dexec.mainClass=io.storj.uplink.example.Example
