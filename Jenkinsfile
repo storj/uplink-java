@@ -14,29 +14,8 @@ pipeline {
             steps {
                 checkout scm
 
-                sh 'mkdir -p .build'
+                sh './scripts/build.sh'
 
-                sh 'service postgresql start'
-            }
-        }
-
-        stage('Verification') {
-            parallel {
-                stage('Testsuite') {
-                    environment {
-                        STORJ_SIM_POSTGRES = 'postgres://postgres@localhost/teststorj?sslmode=disable'
-                    }
-                    steps {
-                        sh 'psql -U postgres -c \'create database teststorj;\''
-                        sh './scripts/test-java.sh'
-                    }
-
-                    post {
-                        always {
-                            junit 'build/test-results/test/TEST-io.storj.UplinkTest.xml'
-                        }
-                    }
-                }
             }
         }
     }

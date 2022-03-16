@@ -1,0 +1,11 @@
+name: build
+on:
+  push: []
+jobs:
+  build-info:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: chekout
+        uses: actions/checkout@v2
+      - name: build
+        run: ./scripts/build.sh

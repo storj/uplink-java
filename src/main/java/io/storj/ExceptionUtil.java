@@ -6,8 +6,7 @@ class ExceptionUtil {
         if (error != null) {
             String message = "" + error.code;
             if (error.message != null) {
-                message = error.message;
-                JNAUplink.INSTANCE.uplink_free_error(error);
+                message = String.valueOf(error.message);
             }
             throw new StorjException(message);
         }

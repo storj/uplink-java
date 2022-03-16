@@ -38,6 +38,9 @@ public class Access {
      * @throws StorjException in case of error
      */
     public static Access parse(String serialized) throws StorjException {
+        if (serialized == null) {
+            throw new StorjException("Empty access grant");
+        }
         JNAUplink.AccessResult.ByValue result = JNAUplink.INSTANCE.uplink_parse_access(serialized);
         ExceptionUtil.handleError(result.error);
         JNAUplink.INSTANCE.uplink_free_access_result(result);
