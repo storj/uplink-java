@@ -34,9 +34,11 @@ Now the library can be used. The only requirement is a Storj access grant which 
 Example for basic operations.
 
 ```java
+
+
         String filesDir = System.getProperty("java.io.tmpdir");
         UplinkOption[] uplinkOptions = new UplinkOption[]{
-        UplinkOption.tempDir(filesDir),
+                UplinkOption.tempDir(filesDir),
         };
 
         Uplink uplink = new Uplink(uplinkOptions);
@@ -44,37 +46,38 @@ Example for basic operations.
         Access accessGrant = Access.parse(System.getenv("UPLINK_ACCESS"));
 
         try (Project project = uplink.openProject(accessGrant)) {
-        project.ensureBucket("bucket1");
+            project.ensureBucket("bucket1");
 
-        String keyName = "key" + new Date().getTime();
+            String keyName = "key" + new Date().getTime();
 
-        //create new object
-        try (ObjectOutputStream upload = project.uploadObject("bucket1", keyName)) {
-        byte[] data = "Hello world".getBytes(StandardCharsets.UTF_8);
-        upload.write(data, 0, data.length);
-        upload.commit();
-        } catch (IOException ex) {
-        throw new RuntimeException(ex);
+            //create new object
+            try (ObjectOutputStream upload = project.uploadObject("bucket1", keyName)) {
+                byte[] data = "Hello world".getBytes(StandardCharsets.UTF_8);
+                upload.write(data, 0, data.length);
+                upload.commit();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+
+            //download object
+            try (ObjectInputStream download = project.downloadObject("bucket1", keyName)) {
+                byte[] buffer = new byte[1024];
+                int n = download.read(buffer);
+                System.out.println(n);
+                if (new String(buffer).equals("Hello world")) {
+                    throw new RuntimeException();
+                }
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+
+            //list objects
+            try (ObjectIterator it = project.listObjects("bucket1")) {
+                while (it.hasNext()) {
+                    System.out.println(it.next().getKey());
+                }
+            }
+
         }
 
-        //download object
-        try (ObjectInputStream download = project.downloadObject("bucket1", keyName)) {
-        byte[] buffer = new byte[1024];
-        int n = download.read(buffer);
-        System.out.println(n);
-        if (new String(buffer).equals("Hello world")) {
-        throw new RuntimeException();
-        }
-        } catch (IOException ex) {
-        throw new RuntimeException(ex);
-        }
-
-        //list objects
-        try (ObjectIterator it = project.listObjects("bucket1")) {
-        while (it.hasNext()) {
-        System.out.println(it.next().getKey());
-        }
-        }
-
-        }
 ```
