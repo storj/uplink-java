@@ -3,7 +3,7 @@ package io.storj;
 /**
  * Signals that an exception occurred when calling a method of the Storj library.
  */
-public class StorjException extends Exception {
+public class StorjException extends RuntimeException {
 
     private static final long serialVersionUID = 5024346477061996880L;
 
