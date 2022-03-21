@@ -5,7 +5,7 @@ jobs:
   build:
     runs-on: ubuntu-18.04
     steps:
-      - name: chekout
+      - name: checkout
         uses: actions/checkout@v2
       - uses: actions/setup-go@v2
         with:
@@ -14,3 +14,4 @@ jobs:
         run: ./scripts/build.sh
       - name: example
         run: ./scripts/build-example.sh
+
