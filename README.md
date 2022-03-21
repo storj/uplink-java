@@ -34,8 +34,6 @@ Now the library can be used. The only requirement is a Storj access grant which 
 Example for basic operations.
 
 ```java
-
-
         String filesDir = System.getProperty("java.io.tmpdir");
         UplinkOption[] uplinkOptions = new UplinkOption[]{
                 UplinkOption.tempDir(filesDir),
