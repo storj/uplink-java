@@ -5,13 +5,22 @@ jobs:
   build:
     runs-on: ubuntu-18.04
     steps:
-      - name: cache
+      - name: cache-java
         uses: actions/cache@v3
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
+      - name: cache-go
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
       - name: checkout
         uses: actions/checkout@v2
       - uses: actions/setup-go@v2
@@ -21,7 +30,7 @@ jobs:
         run: ./scripts/build.sh
       - name: example
         run: ./scripts/build-example.sh
-      - name: archive
+      - name: archive-test
         uses: actions/upload-artifact@v3
         with:
           name: test-results
