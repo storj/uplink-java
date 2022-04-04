@@ -1,39 +1,15 @@
-# uplink-java
+package io.storj.uplink.example;
 
-Java library to access the Storj Network
+import io.storj.*;
 
-## Example
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
 
-First, you need to install to library locally:
+public class Example {
 
-```
-mvn clean install -DskipTests
-```
+    public static void main(String[] args) {
 
-After that you can add the Java dependency:
-
-```
-        <dependency>
-            <groupId>io.storj</groupId>
-            <artifactId>uplink-java</artifactId>
-            <version>1.1.0-SNAPSHOT</version>
-        </dependency>
-```
-
-You need the [uplink-c](https://github.com/storj/uplink-c) binary, which can be built with `./scripts/build-uplink.sh`. 
-
-After the build the library can be found in .build which should be added to the `LD_LIBRARY_PATH` environment variable on linux:
-
-
-```
-export LD_LIBRARY_PATH=`pwd`/.build:$LD_LIBRARY_PATH
-```
-
-Now the library can be used. The only requirement is a Storj access grant which can be generated on satellite API.
-
-Example for basic operations.
-
-```java
         String filesDir = System.getProperty("java.io.tmpdir");
         UplinkOption[] uplinkOptions = new UplinkOption[]{
                 UplinkOption.tempDir(filesDir),
@@ -78,4 +54,6 @@ Example for basic operations.
 
         }
 
-```
+    }
+
+}

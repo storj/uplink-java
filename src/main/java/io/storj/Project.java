@@ -49,11 +49,15 @@ public class Project implements AutoCloseable {
      * @throws StorjException if an error occurs during the deletion
      */
     public BucketInfo createBucket(String bucket) throws StorjException {
-        JNAUplink.BucketResult.ByValue result = JNAUplink.INSTANCE.uplink_create_bucket(this.project, bucket);
-        ExceptionUtil.handleError(result.error);
-
-        BucketInfo bucketInfo = new BucketInfo(result.bucket);
-        JNAUplink.INSTANCE.uplink_free_bucket_result(result);
+        JNAUplink.BucketResult.ByValue result = null;
+        BucketInfo bucketInfo = null;
+        try {
+            result = JNAUplink.INSTANCE.uplink_create_bucket(this.project, bucket);
+            ExceptionUtil.handleError(result.error);
+            bucketInfo = new BucketInfo(result.bucket);
+        } finally {
+            JNAUplink.INSTANCE.uplink_free_bucket_result(result);
+        }
         return bucketInfo;
     }
 
@@ -65,11 +69,15 @@ public class Project implements AutoCloseable {
      * @throws StorjException if an error occurs during the deletion
      */
     public BucketInfo ensureBucket(String bucket) throws StorjException {
-        JNAUplink.BucketResult.ByValue result = JNAUplink.INSTANCE.uplink_ensure_bucket(this.project, bucket);
-        ExceptionUtil.handleError(result.error);
-
-        BucketInfo bucketInfo = new BucketInfo(result.bucket);
-        JNAUplink.INSTANCE.uplink_free_bucket_result(result);
+        JNAUplink.BucketResult.ByValue result = null;
+        BucketInfo bucketInfo = null;
+        try {
+            result = JNAUplink.INSTANCE.uplink_ensure_bucket(this.project, bucket);
+            ExceptionUtil.handleError(result.error);
+            bucketInfo = new BucketInfo(result.bucket);
+        } finally {
+            JNAUplink.INSTANCE.uplink_free_bucket_result(result);
+        }
         return bucketInfo;
     }
 
@@ -85,11 +93,15 @@ public class Project implements AutoCloseable {
      * @throws StorjException if an error occurs during the deletion
      */
     public BucketInfo deleteBucket(String bucket) throws StorjException {
-        JNAUplink.BucketResult.ByValue deleteBucket = JNAUplink.INSTANCE.uplink_delete_bucket(this.project, bucket);
-        ExceptionUtil.handleError(deleteBucket.error);
-
-        BucketInfo bucketInfo = new BucketInfo(deleteBucket.bucket);
-        JNAUplink.INSTANCE.uplink_free_bucket_result(deleteBucket);
+        JNAUplink.BucketResult.ByValue deleteBucket = null;
+        BucketInfo bucketInfo = null;
+        try {
+            deleteBucket = JNAUplink.INSTANCE.uplink_delete_bucket(this.project, bucket);
+            ExceptionUtil.handleError(deleteBucket.error);
+            bucketInfo = new BucketInfo(deleteBucket.bucket);
+        } finally {
+            JNAUplink.INSTANCE.uplink_free_bucket_result(deleteBucket);
+        }
         return bucketInfo;
     }
 
@@ -102,11 +114,15 @@ public class Project implements AutoCloseable {
      * @throws StorjException if an error occurs during the deletion
      */
     public ObjectInfo statObject(String bucket, String key) throws StorjException {
-        JNAUplink.ObjectResult.ByValue statObject = JNAUplink.INSTANCE.uplink_stat_object(this.project, bucket, key);
-        ExceptionUtil.handleError(statObject.error);
-
-        ObjectInfo objectInfo = new ObjectInfo(statObject.object);
-        JNAUplink.INSTANCE.uplink_free_object_result(statObject);
+        JNAUplink.ObjectResult.ByValue statObject = null;
+        ObjectInfo objectInfo = null;
+        try {
+            statObject = JNAUplink.INSTANCE.uplink_stat_object(this.project, bucket, key);
+            ExceptionUtil.handleError(statObject.error);
+            objectInfo = new ObjectInfo(statObject.object);
+        } finally {
+            JNAUplink.INSTANCE.uplink_free_object_result(statObject);
+        }
         return objectInfo;
     }
 
@@ -119,14 +135,20 @@ public class Project implements AutoCloseable {
      * @throws StorjException if an error occurs during the deletion
      */
     public ObjectInfo deleteObject(String bucket, String key) throws StorjException {
-        JNAUplink.ObjectResult.ByValue statObject = JNAUplink.INSTANCE.uplink_delete_object(this.project, bucket, key);
-        ExceptionUtil.handleError(statObject.error);
-        if (statObject.object == null) {
+        ObjectInfo objectInfo = null;
+        JNAUplink.ObjectResult.ByValue statObject = null;
+        try {
+            statObject = JNAUplink.INSTANCE.uplink_delete_object(this.project, bucket, key);
+            ExceptionUtil.handleError(statObject.error);
+            if (statObject.object == null) {
+                return null;
+            }
+            objectInfo = new ObjectInfo(statObject.object);
+        } finally {
             JNAUplink.INSTANCE.uplink_free_object_result(statObject);
-            return null;
+
         }
-        ObjectInfo objectInfo = new ObjectInfo(statObject.object);
-        JNAUplink.INSTANCE.uplink_free_object_result(statObject);
+
         return objectInfo;
     }
 

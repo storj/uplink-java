@@ -29,26 +29,35 @@ import static org.junit.Assert.fail;
 
 public class UplinkTest {
 
-    private static final String VALID_ACCESS = System.getenv("GATEWAY_0_ACCESS");
-    private static Access ACCESS;
+    private static Access access;
 
     private UplinkOption[] uplinkOptions;
 
     @Before
     public void setUp() throws StorjException {
-        ACCESS = Access.parse(VALID_ACCESS);
+        String accessGrant = getAccessGrant();
+        access = Access.parse(accessGrant);
         String filesDir = System.getProperty("java.io.tmpdir");
         uplinkOptions = new UplinkOption[]{
                 UplinkOption.tempDir(filesDir),
         };
     }
 
+    private static String getAccessGrant() {
+        String accessGrant = System.getenv("GATEWAY_0_ACCESS");
+        if (accessGrant == null || accessGrant.length() == 0) {
+            accessGrant = System.getenv("UPLINK_ACCESS");
+        }
+        return accessGrant;
+    }
+
     @Test
     public void testBuckets() throws Exception {
         Uplink uplink = new Uplink(uplinkOptions);
-        try (Project project = uplink.openProject(ACCESS)) {
+        String postfix = "-" + new Date().getTime();
+        try (Project project = uplink.openProject(access)) {
 
-            String[] expectedBuckets = new String[]{"test-bucket", "another", "foo", "bar"};
+            String[] expectedBuckets = new String[]{"test-bucket1" + postfix, "another2" + postfix, "foo3" + postfix, "bar4" + postfix};
 
             for (String name : expectedBuckets) {
                 BucketInfo createBucketInfo = project.createBucket(name);
@@ -61,9 +70,6 @@ public class UplinkTest {
                 BucketInfo ensureBucketInfo = project.ensureBucket(name);
                 Assert.assertEquals(name, ensureBucketInfo.getName());
 
-                statBucket = project.statBucket(name);
-                Assert.assertEquals(name, statBucket.getName());
-                Assert.assertEquals(ensureBucketInfo, statBucket);
             }
 
             String[] toEnsure = new String[]{"gogo", "for", "itit"};
@@ -87,11 +93,21 @@ public class UplinkTest {
                     buckets.add(bucketInfo);
                 }
             }
-            Assert.assertEquals(expectedBuckets.length, buckets.size());
 
-            for (BucketInfo bucket : buckets) {
-                BucketInfo deleteBucketInfo = project.deleteBucket(bucket.getName());
-                Assert.assertEquals(bucket, deleteBucketInfo);
+            for (String b : expectedBuckets) {
+                boolean found = false;
+                for (BucketInfo bucket : buckets) {
+                    if (bucket.getName().equals(b)) {
+                        found = true;
+                        break;
+                    }
+                }
+                Assert.assertTrue("Bucket " + b + " is not returned", found);
+            }
+
+            for (String b : expectedBuckets) {
+                BucketInfo deleteBucketInfo = project.deleteBucket(b);
+                Assert.assertEquals(b, deleteBucketInfo.getName());
             }
 
             for (BucketInfo bucket : buckets) {
@@ -107,8 +123,9 @@ public class UplinkTest {
     @Test
     public void testObjects() throws Exception {
         Uplink uplink = new Uplink(uplinkOptions);
-        try (Project project = uplink.openProject(ACCESS)) {
-            BucketInfo createBucketInfo = project.createBucket("test-objects-test-bucket");
+        String postfix = "-" + new Date().getTime();
+        try (Project project = uplink.openProject(access)) {
+            BucketInfo createBucketInfo = project.createBucket("test-objects-test-bucket" + postfix);
 
             byte[] expectedData = new byte[2 * 1024 * 1024];
             Random random = new Random();
@@ -167,7 +184,7 @@ public class UplinkTest {
     @Test
     public void testObjectsListing() throws Exception {
         Uplink uplink = new Uplink(uplinkOptions);
-        try (Project project = uplink.openProject(ACCESS)) {
+        try (Project project = uplink.openProject(access)) {
             BucketInfo createBucketInfo = project.ensureBucket("test-objects-listing");
 
             byte[] expectedData = new byte[2 * 1024 * 1024];
@@ -213,7 +230,7 @@ public class UplinkTest {
                 = Executors.newFixedThreadPool(4);
 
         Uplink uplink = new Uplink(uplinkOptions);
-        try (final Project project = uplink.openProject(ACCESS)) {
+        try (final Project project = uplink.openProject(access)) {
             BucketInfo createBucketInfo = project.ensureBucket("test-parallel");
 
             final byte[] expectedData = new byte[2 * 1024 * 1024];
@@ -280,7 +297,7 @@ public class UplinkTest {
     public void testPermissions() throws Exception {
         String testData = "test-data";
         Uplink uplink = new Uplink(uplinkOptions);
-        try (Project project = uplink.openProject(ACCESS)) {
+        try (Project project = uplink.openProject(access)) {
             project.ensureBucket("test-upload-permission");
 
             try (ObjectOutputStream os = project.uploadObject("test-upload-permission", "test-key")) {
@@ -290,7 +307,7 @@ public class UplinkTest {
         }
 
         Permission permission = new Permission.Builder().allowDownload().allowList().build();
-        Access sharedAccess = ACCESS.share(permission, new SharePrefix("test-upload-permission"));
+        Access sharedAccess = access.share(permission, new SharePrefix("test-upload-permission"));
         try (Project project = uplink.openProject(sharedAccess)) {
             byte[] data = null;
             try (ObjectInputStream is = project.downloadObject("test-upload-permission", "test-key")) {
@@ -306,7 +323,7 @@ public class UplinkTest {
             }
         }
 
-        sharedAccess = ACCESS.share(permission, new SharePrefix("not-existing-bucket"));
+        sharedAccess = access.share(permission, new SharePrefix("not-existing-bucket"));
         try (Project project = uplink.openProject(sharedAccess)) {
             try {
                 project.statObject("test-upload-permission", "test-key");
@@ -316,7 +333,7 @@ public class UplinkTest {
             }
         }
 
-        try (Project project = uplink.openProject(ACCESS)) {
+        try (Project project = uplink.openProject(access)) {
             project.deleteObject("test-upload-permission", "test-key");
             project.deleteBucket("test-upload-permission");
         }
@@ -324,7 +341,7 @@ public class UplinkTest {
 
     @Test
     public void testAccess() throws Exception {
-        String serializedAccess = VALID_ACCESS;
+        String serializedAccess = getAccessGrant();
         Access access = Access.parse(serializedAccess);
         String newSerializedAccess = access.serialize();
         assertEquals(serializedAccess, newSerializedAccess);
@@ -370,7 +387,7 @@ public class UplinkTest {
             // error expected
         }
 
-        try (final Project project = uplink.openProject(ACCESS)) {
+        try (final Project project = uplink.openProject(access)) {
             try {
                 project.statBucket("not-existing");
                 fail();
@@ -396,10 +413,12 @@ public class UplinkTest {
                 // error expected
             }
 
-            project.createBucket("existing-bucket");
+
+            String bucketName = "existing-bucket-" + new Date().getTime();
+            project.createBucket(bucketName);
 
             try {
-                project.createBucket("existing-bucket");
+                project.createBucket(bucketName);
                 fail();
             } catch (StorjException e) {
                 // error expected
@@ -413,39 +432,39 @@ public class UplinkTest {
             }
 
             try {
-                project.statObject("existing-bucket", "not-existing-object");
+                project.statObject(bucketName, "not-existing-object");
                 fail();
             } catch (StorjException e) {
                 // error expected
             }
             try {
-                project.statObject("existing-bucket", null);
-                fail();
-            } catch (StorjException e) {
-                // error expected
-            }
-
-            try {
-                project.deleteObject("existing-bucket", "not-existing-object");
-                fail();
-            } catch (StorjException e) {
-                // error expected
-            }
-            try {
-                project.deleteObject("existing-bucket", null);
+                project.statObject(bucketName, null);
                 fail();
             } catch (StorjException e) {
                 // error expected
             }
 
             try {
-                project.downloadObject("existing-bucket", "not-existing-object");
+                project.deleteObject(bucketName, "not-existing-object");
+            } catch (StorjException e) {
+                fail();
+            }
+
+            try {
+                project.deleteObject(bucketName, null);
+                fail();
+            } catch (StorjException e) {
+                // error expected
+            }
+
+            try {
+                project.downloadObject(bucketName, "not-existing-object");
                 fail();
             } catch (StorjException e) {
                 // error expected
             }
             try {
-                project.downloadObject("existing-bucket", null);
+                project.downloadObject(bucketName, null);
                 fail();
             } catch (StorjException e) {
                 // error expected

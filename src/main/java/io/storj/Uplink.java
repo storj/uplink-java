@@ -25,10 +25,11 @@ public class Uplink {
         }
 
         JNAUplink.ProjectResult.ByValue result = null;
-        JNAUplink.AccessResult.ByValue internalAccess = JNAUplink.INSTANCE.uplink_parse_access(serializedAccess);
-        ExceptionUtil.handleError(internalAccess.error);
-
+        JNAUplink.AccessResult.ByValue internalAccess = null;
         try {
+            internalAccess = JNAUplink.INSTANCE.uplink_parse_access(serializedAccess);
+            ExceptionUtil.handleError(internalAccess.error);
+
             if (options.length == 0) {
                 result = JNAUplink.INSTANCE.uplink_open_project(internalAccess.access);
             } else {
