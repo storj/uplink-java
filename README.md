@@ -79,3 +79,35 @@ Example for basic operations.
         }
 
 ```
+
+## Development
+
+Switch to a fix release:
+
+```
+mvn versions:set -DnewVersion=1.0.0
+cd example 
+mvn versions:set -DnewVersion=1.0.0
+```
+
+And change manually the dependency version in `pom.xml`.
+
+Make sure you have the credentials in your `~/.m2/settings.xml`:
+
+```
+<settings>
+  <servers>
+    <server>
+      <id>ossrh</id>
+      <username>storjling</username>
+      <password>PASSWORD</password>
+    </server>
+  </servers>
+</settings>
+```
+
+Upload to maven staging:
+
+```
+mvn clean deploy -P release
+```
