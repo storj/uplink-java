@@ -80,7 +80,9 @@ Example for basic operations.
 
 ```
 
-## Development
+## Release process
+
+_NOTE: This section is for the maintainer of the library, not for the users of the library._
 
 Switch to a fix release:
 
