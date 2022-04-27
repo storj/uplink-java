@@ -7,3 +7,5 @@ build
 .build
 .idea
 local.properties
+
+pom.xml.versionsBackup
