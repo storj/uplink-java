@@ -8,15 +8,8 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.nio.ByteBuffer;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -472,4 +465,55 @@ public class UplinkTest {
         }
     }
 
+    @Test
+    public void testMove() throws Exception {
+        Random random = new Random();
+
+        Uplink uplink = new Uplink(uplinkOptions);
+        String prefix = "" + Math.abs(random.nextInt());
+        try (Project project = uplink.openProject(access)) {
+            BucketInfo sourceBucket = project.ensureBucket("test-move-from-" + prefix);
+            BucketInfo destinationBucket = project.ensureBucket("test-move-to-" + prefix);
+            int length = 2 * 1024 * 1024;
+
+            byte[] expectedData = new byte[length];
+
+            random.nextBytes(expectedData);
+
+
+            try (ObjectOutputStream os = project.uploadObject(sourceBucket.getName(), "test-file")) {
+                os.write(expectedData);
+                os.commit();
+            }
+
+            try (ObjectOutputStream os = project.uploadObject(sourceBucket.getName(), "test-file2")) {
+                os.write(expectedData);
+                os.commit();
+            }
+
+            project.moveObject(sourceBucket.getName(), "test-file", destinationBucket.getName(), "test-dest");
+
+            try (ObjectInputStream is = project.downloadObject(destinationBucket.getName(), "test-dest")) {
+                ByteBuffer byteBuffer = ByteBuffer.allocate(length);
+                Assert.assertArrayEquals(expectedData, ByteStreams.toByteArray(is));
+            }
+
+        }
+    }
+
+    @Test(expected = StorjException.class)
+    public void testMoveFailure() throws Exception {
+        Random random = new Random();
+
+        Uplink uplink = new Uplink(uplinkOptions);
+        String prefix = "" + Math.abs(random.nextInt());
+        try (Project project = uplink.openProject(access)) {
+            BucketInfo sourceBucket = project.ensureBucket("test-move-from-" + prefix);
+            BucketInfo destinationBucket = project.ensureBucket("test-move-to-" + prefix);
+
+
+            project.moveObject(sourceBucket.getName(), "test-file", destinationBucket.getName(), "test-dest");
+            // exception is expected, not sigfailure
+        }
+    }
 }
