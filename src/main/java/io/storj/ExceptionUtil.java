@@ -6,7 +6,7 @@ class ExceptionUtil {
         if (error != null) {
             String message = "" + error.code;
             if (error.message != null) {
-                message = String.valueOf(error.message);
+                message = error.message;
             }
             throw new StorjException(message);
         }

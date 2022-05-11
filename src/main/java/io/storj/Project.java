@@ -126,6 +126,20 @@ public class Project implements AutoCloseable {
         return objectInfo;
     }
 
+    public void moveObject(String oldBucket, String oldKey, String newBucket, String newKey) throws StorjException {
+        JNAUplink.Error.ByReference error = JNAUplink.INSTANCE.uplink_move_object(this.project, oldBucket, oldKey, newBucket, newKey);
+        try {
+            ExceptionUtil.handleError(error);
+        } finally {
+            if (error != null) {
+                // autoread is required here to avoid re-reading the fields which are already free-d by the uplink-c.
+                error.setAutoRead(false);
+                JNAUplink.INSTANCE.uplink_free_error(error);
+            }
+        }
+    }
+
+
     /**
      * Deletes an object from this bucket.
      *

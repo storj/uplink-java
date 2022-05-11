@@ -1,10 +1,6 @@
 package io.storj;
 
-import com.sun.jna.Library;
-import com.sun.jna.Native;
-import com.sun.jna.NativeLong;
-import com.sun.jna.Pointer;
-import com.sun.jna.Structure;
+import com.sun.jna.*;
 
 interface JNAUplink extends Library {
 
@@ -119,15 +115,14 @@ interface JNAUplink extends Library {
 
     @Structure.FieldOrder({"code", "message"})
     public static class Error extends Structure {
+
         public int code;
         public String message;
 
         public Error() {
-            super();
         }
 
         public Error(int code, String message) {
-            super();
             this.code = code;
             this.message = message;
         }
@@ -751,4 +746,6 @@ interface JNAUplink extends Library {
     void uplink_free_string_result(StringResult.ByValue result);
 
     void uplink_free_error(Error.ByReference error);
+
+    Error.ByReference uplink_move_object(Project.ByReference project, String bucket, String key, String newBucket, String newKey);
 }
