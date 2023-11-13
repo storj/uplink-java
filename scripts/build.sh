@@ -14,10 +14,10 @@ fi
 
 trap "docker-compose down -v" EXIT
 docker-compose down -v
+docker-compose build
 docker-compose up -d
 
-#TODO: use smarter way to check if it's up and running
-sleep 30
+storj-up health -d 60
 
 eval $(storj-up credentials -e)
 mvn clean install
