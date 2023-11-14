@@ -6,7 +6,7 @@
 
     <groupId>io.storj</groupId>
     <artifactId>uplink-java-example</artifactId>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>1.1.1-SNAPSHOT</version>
 
     <name>uplink-java-example</name>
     <url>https://storj.io</url>
@@ -21,7 +21,7 @@
         <dependency>
             <groupId>io.storj</groupId>
             <artifactId>uplink-java</artifactId>
-            <version>1.1.0-SNAPSHOT</version>
+            <version>1.1.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
