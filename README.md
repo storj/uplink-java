@@ -1,6 +1,23 @@
 # uplink-java
 
+## ⚠️ Important Notice: Repository Status
+
+This library is **no longer actively maintained** and may not be compatible with current Storj services. Support for this library is unavailable, and users are advised to use alternative solutions such as the [Storj Go library](https://github.com/storj/uplink).
+
+### Recommendations for Users:
+- **Use at your own risk**: This library may contain outdated dependencies and unsupported features.
+- **Alternative Options**: For actively maintained libraries, consider using the official [Storj Go library](https://github.com/storj/uplink).
+
+### Current Release:
+The latest release of this library is `v1.0.0-rc.1`. No further updates or fixes are planned.
+
+## Overview
+
 Java library to access the Storj Network
+
+### Disclaimer
+This repository is provided "as-is" without any guarantees of functionality or compatibility. Please ensure you test thoroughly before using it in production environments.
+
 
 ## Example
 
